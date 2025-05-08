@@ -21,7 +21,7 @@ pipeline {
                 bat 'mvn package'
             }
 
-            
+             }
         }
         post {
                 success {
@@ -41,6 +41,6 @@ pipeline {
                 failure {
                     echo 'Build failed. Deployment skipped.'
                 }
-            }
+           
     }
 }
