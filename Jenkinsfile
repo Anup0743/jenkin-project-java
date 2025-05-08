@@ -21,25 +21,7 @@ pipeline {
                 bat 'mvn package'
             }
 
-            post {
-                success {
-                    echo 'Build successful. Archiving and deploying...'
-
-                    // Archive WAR file
-                    archiveArtifacts artifacts: 'target/*.war', fingerprint: true
-
-                    // Deploy WAR to Tomcat using curl
-                    bat """
-                        curl -u root:root ^
-                        --upload-file target/*.war ^
-                        "http://localhost:8080/manager/text/deploy?path=/myapp&update=true"
-                    """
-                }
-
-                failure {
-                    echo 'Build failed. Deployment skipped.'
-                }
-            }
+            
         }
     }
 }
