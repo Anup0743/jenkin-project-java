@@ -1,8 +1,10 @@
 pipeline {
     agent any
- tools {
-        maven 'Maven 3.8.6' // name must match the one set above
+
+    tools {
+        maven 'Maven 3.8.6' // Name must match the one set in Jenkins Global Tools
     }
+
     stages {
         stage('version') {
             steps {
@@ -20,27 +22,26 @@ pipeline {
             steps {
                 bat 'mvn package'
             }
-
-             }
         }
-        post {
-                success {
-                    echo 'Build successful. Archiving and deploying...'
+    }
 
-                    // Archive WAR file
-                    archiveArtifacts artifacts: 'target/jenkin.war', fingerprint: true
+    post {
+        success {
+            echo 'Build successful. Archiving and deploying...'
 
-                    // Deploy WAR to Tomcat using curl
-                    bat """
-                        curl -u root:root ^
-                        --upload-file target/jenkin.war ^
-                        "http://localhost:8080/manager/text/deploy?path=/myapp&update=true"
-                    """
-                }
+            // Archive WAR file
+            archiveArtifacts artifacts: 'target/jenkin.war', fingerprint: true
 
-                failure {
-                    echo 'Build failed. Deployment skipped.'
-                }
-           
+            // Deploy WAR to Tomcat using curl
+            bat """
+                curl -u root:root ^
+                --upload-file target/jenkin.war ^
+                "http://localhost:8080/manager/text/deploy?path=/myapp&update=true"
+            """
+        }
+
+        failure {
+            echo 'Build failed. Deployment skipped.'
+        }
     }
 }
